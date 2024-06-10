@@ -1,26 +1,24 @@
-CC = g++
-CFLAGS = -Wall -Wextra -std=c++11
-LDFLAGS = -lncurses -lmenu
+CXX = g++
+CXXFLAGS = -Wall -Wextra -std=c++11 -Iinclude
 
-SRCDIR = src
-INCDIR = include
-BINDIR = bin
+SRC_DIR = src
+BIN_DIR = bin
+INC_DIR = include
 
-SRC = $(wildcard $(SRCDIR)/*.cpp)
-OBJ = $(SRC:$(SRCDIR)/%.cpp=$(BINDIR)/%.o)
+SRCS = $(wildcard $(SRC_DIR)/*.cpp)
+OBJS = $(patsubst $(SRC_DIR)/%.cpp, $(BIN_DIR)/%.o, $(SRCS))
+TARGET = main
 
-EXECUTABLE = main
+all: $(TARGET)
 
-all: $(EXECUTABLE)
+$(TARGET): $(OBJS)
+	$(CXX) $(CXXFLAGS) $(OBJS) -o $(TARGET) -lncurses -lmenu -lform
 
-$(EXECUTABLE): $(OBJ)
-	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
+$(BIN_DIR)/%.o: $(SRC_DIR)/%.cpp | $(BIN_DIR)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(BINDIR)/%.o: $(SRCDIR)/%.cpp
-	@mkdir -p $(BINDIR)
-	$(CC) $(CFLAGS) -I$(INCDIR) -c $< -o $@
+$(BIN_DIR):
+	mkdir -p $(BIN_DIR)
 
 clean:
-	rm -rf $(BINDIR) $(EXECUTABLE)
-
-.PHONY: all clean
+	rm -f $(BIN_DIR)/*.o $(TARGET)

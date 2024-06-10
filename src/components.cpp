@@ -1,3 +1,6 @@
+#ifndef COMPONENTS_H
+#define COMPONENTS_H
+
 #include <ncurses.h>
 #include <menu.h>
 #include <stdlib.h>
@@ -7,13 +10,13 @@
 #define MENU_WIDTH 20
 
 void init_ncurses() {
-    initscr();            // Initialize the window
-    cbreak();             // Line buffering disabled, Pass on everything
-    keypad(stdscr, TRUE); // Enable F1, F2, arrow keys, etc.
-    noecho();             // Don't echo() while we do getch
-    curs_set(0);          // Hide the cursor
-    start_color();        // Start color functionality
-}
+    initscr();            
+    cbreak();             
+    keypad(stdscr, TRUE); 
+    noecho();             
+    curs_set(0);          
+    start_color();        
+    }
 
 WINDOW* create_window(int height, int width, int starty, int startx) {
     WINDOW *win = newwin(height, width, starty, startx);
@@ -51,6 +54,7 @@ void cleanup_menu(MENU *menu) {
 }
 
 void draw_border(WINDOW *win){
-
     wborder(win, '|', '|', '-', '-', '+', '+', '+', '+');
 }
+
+#endif
