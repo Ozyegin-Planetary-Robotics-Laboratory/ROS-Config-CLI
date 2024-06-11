@@ -1,20 +1,24 @@
+#ifndef MENU_FUNCTIONS_H
+#define MENU_FUNCTIONS_H
+
+#include "helpers.hpp"
+#include "components.hpp"
+
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <ncurses.h>
 #include <menu.h>
-#include <form.h>
 #include <string.h>
 #include <stdlib.h>
 #include <cctype>  
-#include "helper_functions.h"
 
 #define PREFIX "export ROS_MASTER_URI=http://"
+#define SUFFIX ":11311"
 #define FILE_PATH "/home/vscode/.bashrc"
 #define MAX_LINE 1024
 #define BACKUP_SUFFIX ".bak"
-#define ERORR_LINE_X 40
-#define ERROR_LINE_Y 1
+
 
 int view_uri_function(WINDOW *win) {
     int line_count;
@@ -57,6 +61,8 @@ int delete_uri_function(WINDOW *win) {
         int pos = 0;
         int ch;
 
+        draw_border(win);       
+        refresh();
         while ((ch = wgetch(win)) != '\n' && pos < 9) 
         {
             if (ch == KEY_BACKSPACE || ch == 127) 
@@ -88,14 +94,29 @@ int delete_uri_function(WINDOW *win) {
         } 
         else 
         {
-            mvwprintw(win, line_count + 8, 2, "Invalid choice");
+            view_error_message(win, "Invalid choice");
         }
         wrefresh(win);       
     }
     return 0;
 }
 
-int add_uri_function(){
+int add_uri_function(WINDOW *win) {
+
+    char ip_buffer[16] = {0};
+    draw_border(win);
+    refresh();
+    get_ip_input(win, ip_buffer, sizeof(ip_buffer));
+
+    if(!check_ip_validity(ip_buffer))
+    {
+        view_error_message(win, "Invalid IP address");
+        return 0;
+    }
+    
+    append_to_bashrc(ip_buffer, FILE_PATH, win);
+    wrefresh(win);
+    
     return 0;
 }
-
+#endif

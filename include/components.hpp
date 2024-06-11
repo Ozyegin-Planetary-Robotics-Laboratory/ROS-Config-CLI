@@ -1,6 +1,9 @@
 #ifndef COMPONENTS_H
 #define COMPONENTS_H
 
+#include "helpers.hpp"
+
+
 #include <ncurses.h>
 #include <menu.h>
 #include <stdlib.h>
@@ -37,7 +40,7 @@ MENU* create_menu(WINDOW *win, const char *choices[], int n_choices) {
 
     MENU *menu = new_menu((ITEM **)items);
     set_menu_win(menu, win);
-    set_menu_sub(menu, derwin(win, n_choices + 2, 18, (starty/2) - 2, 10)); // argumenst: height, width, starty, startx
+    set_menu_sub(menu, derwin(win, n_choices + 2, 18, (starty/2) - 2, 10)); 
     set_menu_mark(menu, " * ");
     post_menu(menu);
     wrefresh(win);

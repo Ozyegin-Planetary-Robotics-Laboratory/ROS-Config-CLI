@@ -7,7 +7,6 @@ ROS Config CLI is a command-line interface (CLI) tool designed to simplify the m
 - **File Reading**: Read and parse configuration files relevant to ROS.
 - **View**: View existing URI configurations.
 - **Add**: Add new URI configurations.
-- **Edit**: Edit existing URI configurations.
 - **Delete**: Delete URI configurations.
 
 ## Usage
@@ -23,6 +22,7 @@ git clone https://github.com/Ozyegin-Planetary-Robotics-Laboratory/ROS-Config-CL
 ```
 3. **Run**: Executr the main program:
 ```bash
+    cd bin
    ./main
 ```
 

@@ -1,14 +1,8 @@
-#include <cstring>
-#include <cstdio>
-#include <cstdlib>
+#include "../include/menu_functions.hpp"
+#include "../include/components.hpp"
+#include "../include/helpers.hpp"
 #include <ncurses.h>
-
-
-#include "components.h"
-#include "menu_functions.h"
-#include "helper_functions.h"
-
-
+#include <menu.h>
 
 int main(){
 
@@ -29,6 +23,7 @@ int main(){
     check_for_terminal_size(term_h, term_w);
 
     WINDOW *menu_win = create_window(term_h - 2 , 40, 1, 1);
+    mvprintw(0, 2, "Use arrow keys to go up and down, Press enter to select a choice");
     draw_border(menu_win);
     refresh();
 
