@@ -1,39 +1,69 @@
-#include "../include/menu_functions.hpp"
-#include "../include/components.hpp"
-#include "../include/helpers.hpp"
 #include <ncurses.h>
 #include <menu.h>
+#include <cstdlib> 
+#include <cstring>
+#include <cstdlib> // For getenv function
+
+#include "../include/components.hpp"
+#include "../include/helpers.hpp"
+#include "../include/rosnetconfig.hpp"
+#include "../include/menu_functions.hpp"
+#define MENU_WIDTH 30  
+#define INFO_HEIGHT 2
+
 
 int main(){
 
     init_ncurses();
 
+    int term_height, term_width;
+    getmaxyx(stdscr, term_height, term_width);
+
+    WINDOW *menu_win = create_newwin(term_height, MENU_WIDTH, 0, 0);
+    draw_border(menu_win);
+
+    WINDOW *info_win = create_newwin(INFO_HEIGHT, term_width - MENU_WIDTH, 0, MENU_WIDTH);
+    draw_border(info_win);
+    
+    WINDOW *main_win = create_newwin(term_height - INFO_HEIGHT, term_width - MENU_WIDTH, INFO_HEIGHT, MENU_WIDTH);
+    draw_border(main_win);
+
     const char *choices[] = {
-        "View URI",
-        "Add URI",
-        "Delete URI",
+        "View configs",
+        "Add config",
+        "Delete config",
+        "View System Env",
+        "Update System Env",
         "Exit"
     };
 
-    int n_choices = sizeof(choices) / sizeof(choices[0]);
-    int term_h, term_w;
+    MENU *menu = create_menu(choices, 6);
+    set_menu_win(menu, menu_win);
+    set_menu_sub(menu, derwin(menu_win, term_height/2, MENU_WIDTH -2 ,1, 1));
+    set_menu_mark(menu, " * ");
+    post_menu(menu);
+    wrefresh(menu_win);
+    
+    if (!check_rosconfig_exists()) 
+    {
+        char *home = getenv("HOME");
+        std::string home_path = home;
+        view_message_at_info(info_win, ("File not found at " + home_path + ". Creating one...").c_str(), 0, 0);
+        
+        sleep(1);
+        
+        if (!create_rosconfig_file()) 
+        {
+            view_message_at_info(info_win, "Error creating .rosconfig file", 0, 0);
+        }
 
-    getmaxyx(stdscr, term_h, term_w);
-
-    check_for_terminal_size(term_h, term_w);
-
-    WINDOW *menu_win = create_window(term_h - 2 , 40, 1, 1);
-    mvprintw(0, 2, "Use arrow keys to go up and down, Press enter to select a choice");
-    draw_border(menu_win);
-    refresh();
-
-    WINDOW *func_win = create_window(term_h - 2, term_w - 44, 1, 42);
-    draw_border(func_win); // Draw border for func_win
-    refresh();
-
-    MENU *menu = create_menu(menu_win, choices, n_choices);
-    refresh();
-
+        view_message_at_info(info_win, ("Created .rosconfig file at " + home_path).c_str(), 0, 0);
+    }
+    else 
+    {
+        view_message_at_info(info_win, ".rosconfig file found. You can use the program with arrow keys", 0, 0);
+    }
+    
     int ch;
     while((ch = getch()) != 'q')
     { 
@@ -57,16 +87,21 @@ int main(){
                     goto exit;
                 }
 
-                wclear(func_win);
-                wrefresh(func_win);
-                handle_menu_selection(choice, func_win); 
+                wclear(main_win);
+                wrefresh(main_win);
+                handle_menu_selection(choice, main_win, info_win); 
             }
             break;
         }
         wrefresh(menu_win);
-        wrefresh(func_win);
+        wrefresh(main_win);
     }
+
     exit:
-    cleanup_and_exit(menu_win, func_win, menu);
+    unpost_menu(menu);
+    free_menu(menu);
+    endwin();
     return 0;
+
+
 }

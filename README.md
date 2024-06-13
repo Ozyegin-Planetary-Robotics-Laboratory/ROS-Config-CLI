@@ -4,31 +4,40 @@ ROS Config CLI is a command-line interface (CLI) tool designed to simplify the m
 
 ## Features
 
-- **File Reading**: Read and parse configuration files relevant to ROS.
-- **View**: View existing URI configurations.
+- **View**: Display existing URI configurations.
 - **Add**: Add new URI configurations.
-- **Delete**: Delete URI configurations.
+- **Delete**: Remove URI configurations.
+- **View System Env**: View and manage ROS-related environment variables.
+- **Update System Env**: Set ROS_MASTER_URI and ROS_IP based on selected configurations.
 
 ## Usage
 
-1. **Installation**: Clone this repository to your local machine.
+### Installation
+
+Clone this repository to your local machine:
+
 ```bash
 git clone https://github.com/Ozyegin-Planetary-Robotics-Laboratory/ROS-Config-CLI.git
 ```
 
-2. **Build**: Run the provided Makefile to build the executable:
+Navigate to the cloned directory and build the executable using the provided Makefile:
+
 ```bash
-   make
+cd ROS-Config-CLI
+make
 ```
-3. **Run**: Executr the main program:
+
+After building, navigate to the bin directory and execute the main program:
 ```bash
-    cd bin
-   ./main
+cd bin
+./main
 ```
+
 
 ## Dependencies
 
-- **ncurses**: The NCurses library for creating text-based user interfaces.
-- **menu**: The menu library, a part of the NCurses package, for creating interactive menus.
+- **ncurses**: A library for creating text-based user interfaces in the terminal.
+- **form**: A component of ncurses that allows you to create and handle forms, which are used to collect user input.
+- **menu**: Another component of ncurses that enables you to create menus for user interaction.
 
-
+Make sure these dependencies are installed on your system before attempting to build and run ROS Config CLI.

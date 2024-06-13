@@ -1,24 +1,31 @@
-CXX = g++
-CXXFLAGS = -Wall -Wextra -std=c++11 -Iinclude
-LDFLAGS = -L/usr/lib -lncurses -lmenu
+# Makefile for compiling and linking the main.cpp file with ncurses, form, and menu libraries
 
+# Compiler and compiler flags
+CXX = g++
+CXXFLAGS = -std=c++11 -Wall
+LIBS = -lncurses -lform -lmenu
+
+# Directories
 SRC_DIR = src
+INC_DIR = include
 BIN_DIR = bin
 
-SRCS = $(wildcard $(SRC_DIR)/*.cpp)
-OBJS = $(patsubst $(SRC_DIR)/%.cpp, $(BIN_DIR)/%.o, $(SRCS))
-TARGET = $(BIN_DIR)/main
+# Source files and executable name
+SOURCES = $(wildcard $(SRC_DIR)/*.cpp)
+EXECUTABLE = $(BIN_DIR)/main
 
-all: $(TARGET)
+# Default target
+all: $(EXECUTABLE)
 
-$(TARGET): $(OBJS) | $(BIN_DIR)
-	$(CXX) $(OBJS) -o $@ $(LDFLAGS)
+# Ensure BIN_DIR exists before compiling
+$(shell mkdir -p $(BIN_DIR))
 
-$(BIN_DIR)/%.o: $(SRC_DIR)/%.cpp | $(BIN_DIR)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+# Linking step
+$(EXECUTABLE): $(SOURCES)
+	$(CXX) $(CXXFLAGS) -I$(INC_DIR) $^ -o $@ $(LIBS)
 
-$(BIN_DIR):
-	mkdir -p $(BIN_DIR)
-
+# Clean target
 clean:
-	rm -rf $(BIN_DIR)/*.o $(TARGET)
+	rm -rf $(BIN_DIR)
+
+.PHONY: all clean
