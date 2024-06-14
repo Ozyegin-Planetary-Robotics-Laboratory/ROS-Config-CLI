@@ -323,7 +323,7 @@ void update_system_env(WINDOW *main_win, WINDOW *info_win){
 
     if (!foundMarker) {
         outFile << std::endl << markerLine << std::endl;
-        outFile << "export ROS_MASTER_URI=" << selectedConfigData.server_ip << std::endl;
+        outFile << "export ROS_MASTER_URI=http://" << selectedConfigData.server_ip << ":11311" << std::endl;
         outFile << "export ROS_IP=" << selectedConfigData.client_ip << std::endl;
     }
 
